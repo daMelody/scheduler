@@ -1,2 +1,3 @@
 # scheduler
-pipeline from google sheets to google calendar
+
+A pipeline from Google Sheets to Google Calendar

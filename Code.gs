@@ -87,48 +87,14 @@ function getTime(sheet, cell) {
   return sheet.getRange(range.toString()).getValue().toString();
 }
 
-/** produces array of Date objects which correspond to begin, end of event */
-function getDates(sheet, cells) {
-  var beginDate, endDate;
-  beginDate = cells[0].substring(0,1) + "1";
-  beginDate = sheet.getRange(beginDate.toString()).getValue().toString().substring(0,15);
-  endDate = cells[1].substring(0,1) + "1";
-  endDate = sheet.getRange(endDate.toString()).getValue().toString().substring(0,15);
-  // find times, move end time up by 30mins
-  var endRow = parseInt(cells[1].substring(1)) + 1;
-  if (endRow > bottom_row) { // if event ends at 12am, increment dates[1] by 1 day
-    var today = endDate.substring(8,10);
-    var tomorrow = parseInt(today) + 1;
-    endDate = endDate.replace(today, tomorrow.toString());
-    endRow = 3;
-  }
-  cells[1] = cells[1].replace(cells[1].substring(1), endRow);
-  var start = getTime(sheet, cells[0]);   // start time
-  var finish = getTime(sheet, cells[1]);  // finish time
-  // making the Date objects
-  var zone = sheet.getRange(time_zone).getValue();  // get time zone
-  start = newDate(zone, beginDate, start);
-  finish = newDate(zone, endDate, finish);
-  return [start, finish]
-}
 
-/** inputs a highlighted range as an event into
- * a calendar selected by background color */
+/** iterates thru the highlighted range and inputs events into
+ * calendars selected by background color */
 function calendarize() {
   var sheet = SpreadsheetApp.getActive();
   var cells = getCells(sheet);
-  // process info from spreadsheet
-  var name = sheet.getRange(cells[0]).getValue();
-  var dates = getDates(sheet, cells);
-  // select a calendar for the event
-  var cal = calendarSelector(sheet.getRange(calendar_list).getValues(),
-                             sheet.getRange(calendar_list).getBackgrounds(),
-                             sheet.getRange(cells[0]).getBackground());
 
-  // get location
-  var location = SpreadsheetApp.getUi().prompt('Event location:').getResponseText();
-  // actually put the event into the calendar
-  inputEvent(cal, name, dates[0], dates[1], location);
+
 }
 
 /** deletes first day and moves all events over to the left */
@@ -139,6 +105,8 @@ function sheetify() {
   shifted.copyTo(destination);
   sheet.getRange(last_column).clear();
 }
+
+
 
 function halvsies(d2array) {
   for (var i=0; i < d2array.length; i++) {

@@ -94,6 +94,9 @@ function calendarize() {
   var sheet = SpreadsheetApp.getActive();
   var cells = getCells(sheet);
 
+  for (var i=0; i < cells.length; i++) {
+    Logger.log(cells[i]);
+  }
 
 }
 

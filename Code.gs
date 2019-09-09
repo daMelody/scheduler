@@ -7,6 +7,7 @@ var copied = 'D3:P50';  // region of calendar to copy
 var pasted = 'C3:O50';  // one column to the left of COPIED
 var calendar_region = 'C3:P50';  // where events are entered and displayed
 
+
 /** the main function */
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
@@ -17,6 +18,7 @@ function onOpen() {
     .addItem('Update Sheets', 'sheetify')
     .addToUi();
 }
+
 
 /** selects calendar by color */
 function calendarSelector(calNames, colorArray, cellColor) {
@@ -41,6 +43,7 @@ function calendarSelector(calNames, colorArray, cellColor) {
   return calendar;
 }
 
+
 /** handles the actual calendar selection and input */
 function inputEvent(cal, name, start, finish, loc) {
   var calendar = CalendarApp.getCalendarsByName(cal)[0];
@@ -53,10 +56,12 @@ function inputEvent(cal, name, start, finish, loc) {
   }
 }
 
+
 /** creates Date objects for calendar input */
 function newDate(zone, date, time) {
  return new Date(date + ' ' + time + ' ' + zone);
 }
+
 
 /** gets beginning and end cells from active range */
 function getCells(sheet) {
@@ -81,6 +86,7 @@ function getCells(sheet) {
   return [begin, end];
 }
 
+
 /** traverses spreadsheet to return corresponding time of an "event cell" */
 function getTime(sheet, cell) {
   var range = "A" + cell.substring(1);
@@ -92,13 +98,20 @@ function getTime(sheet, cell) {
  * calendars selected by background color */
 function calendarize() {
   var sheet = SpreadsheetApp.getActive();
-  var cells = getCells(sheet);
+  var range = sheet.getActiveRange();
+  var right = range.getLastColumn();
+  var bottom = range.getLastRow();
 
-  for (var i=0; i < cells.length; i++) {
-    Logger.log(cells[i]);
+  var values = range.getValues();
+  var backgrounds = range.getBackgrounds();
+
+  for (var col=0; col < right-2; col++) {
+    for (var row=0; row < bottom-2; row++) {
+      // insert inspection code here
+    }
   }
-
 }
+
 
 /** deletes first day and moves all events over to the left */
 function sheetify() {
@@ -110,13 +123,13 @@ function sheetify() {
 }
 
 
-
 function halvsies(d2array) {
   for (var i=0; i < d2array.length; i++) {
     d2array[i][0] = d2array[i][0] * 0.5;
   }
   return d2array;
 }
+
 
 function calTotals() {
   var sheet = SpreadsheetApp.getActive()
@@ -150,6 +163,7 @@ function calTotals() {
   // print updated sums to spreadsheet
   sheet.getRange(hours_list).setValues(halvsies(counter));
 }
+
 
 // calculating total hours by event title and calendar
 function onEdit(e) {

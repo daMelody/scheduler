@@ -45,14 +45,13 @@ function calendarSelector(calNames, colorArray, cellColor) {
 
 
 /** handles the actual calendar selection and input */
-function inputEvent(cal, name, start, finish, loc) {
+function inputEvent(cal, name, start, finish) {
   var calendar = CalendarApp.getCalendarsByName(cal)[0];
   if (calendar.getEvents(start, finish)[0] != undefined &&
       calendar.getEvents(start,finish)[0].getTitle() == name) {
     Logger.log('Event already exists');
   } else {
-    var reminder = SpreadsheetApp.getUi().prompt('Reminder before event (minutes)?').getResponseText();
-    calendar.createEvent(name, start, finish, {location: loc}).addEmailReminder(reminder);
+    calendar.createEvent(name, start, finish, addEmailReminder(reminder);
   }
 }
 
@@ -90,6 +89,13 @@ function getCells(sheet) {
 /** traverses spreadsheet to return corresponding time of an "event cell" */
 function getTime(sheet, cell) {
   var range = "A" + cell.substring(1);
+  return sheet.getRange(range.toString()).getValue().toString();
+}
+
+
+/** traverses spreadsheet to return corresponding date of an "event cell" */
+function getDate(sheet, cell) {
+  var range = cell.substring(0) + "1";
   return sheet.getRange(range.toString()).getValue().toString();
 }
 

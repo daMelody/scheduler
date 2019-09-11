@@ -1,3 +1,4 @@
+var sheet = SpreadsheetApp.getActiveSheet();  // define the sheet
 var time_zone = 'T16';  // cell where time zone is specified
 var calendar_list = 'S7:S13';  // cell range where calendars are listed
 var hours_list = 'T7:T13';  // cell range where total hours are shown
@@ -82,7 +83,6 @@ function getDate(sheet, cell) {
 /** iterates thru the highlighted range and inputs events into
  * calendars selected by background color */
 function calendarize() {
-  var sheet = SpreadsheetApp.getActive();
   var range = sheet.getRange(calendar_region);
   var values = range.getValues();
   var backgrounds = range.getBackgrounds();
@@ -123,13 +123,41 @@ function calendarize() {
 
 /** deletes first day and moves all events over to the left */
 function sheetify() {
-  var sheet = SpreadsheetApp.getActive();
   var shifted = sheet.getRange(copied);
   var destination = sheet.getRange(pasted);
   shifted.copyTo(destination);
   sheet.getRange(last_column).clear();
+  var dayRange = sheet.getRange("C2:P2");
+  var names = getWeekDays(dayRange);
+  dayRange.setValues([names]);
 }
 
+
+function getWeekDays(dayRange) {
+  var days = dayRange.getValues()[0];
+  // iterate through days array and reassign
+  for (var i=0; i < days.length; i++) {
+    Logger.log("day: " + days[i]);
+    switch (days[i]) {
+      case 1: days[i] = "Sunday";
+        break;
+      case 2: days[i] = "Monday";
+        break;
+      case 3: days[i] = "Tuesday";
+        break;
+      case 4: days[i] = "Wednesday";
+        break;
+      case 5: days[i] = "Thursday";
+        break;
+      case 6: days[i] = "Friday";
+        break;
+      case 7: days[i] = "Saturday";
+        break;
+      default: Logger.log("Invalid day?");
+    }
+  }
+  return days;
+}
 
 
 function halvsies(d2array) {
@@ -140,7 +168,6 @@ function halvsies(d2array) {
 }
 
 function calTotals() {
-  var sheet = SpreadsheetApp.getActive()
   var colors = sheet.getRange(calendar_region).getBackgrounds();
   var calendars = sheet.getRange(calendar_list).getBackgrounds();
   var counter = [[0],[0],[0],[0],[0],[0],[0]];
